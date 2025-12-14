@@ -1,12 +1,15 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles, Brain, Target, Calendar, TrendingUp, Users } from "lucide-react";
+import { ArrowRight, Sparkles, Brain, Target, Calendar, TrendingUp, Users, Shield } from "lucide-react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 interface HeroSectionProps {
   onGetStarted: () => void;
 }
 
 export const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
+  const navigate = useNavigate();
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Effects */}
@@ -71,8 +74,9 @@ export const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
               Bắt đầu ngay
               <ArrowRight className="w-5 h-5" />
             </Button>
-            <Button variant="glass" size="xl">
-              Xem demo
+            <Button variant="glass" size="xl" onClick={() => navigate("/admin")}>
+              <Shield className="w-5 h-5" />
+              Admin Portal
             </Button>
           </motion.div>
 
