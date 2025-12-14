@@ -1,10 +1,11 @@
 import { useState, useMemo } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import { AdminDashboard } from "@/components/admin/AdminDashboard";
 import { TeamMembersList } from "@/components/admin/TeamMembersList";
 import { MemberDetailView } from "@/components/admin/MemberDetailView";
+import { Leaderboard } from "@/components/admin/Leaderboard";
 import { 
   generateMockTeamMembers, 
   generateTeamStats, 
@@ -27,18 +28,26 @@ const AdminPortal = () => {
     setSelectedMemberId(null);
   };
 
-  const handleBackToUser = () => {
+  const handleLogout = () => {
+    // Clear user data from localStorage
+    localStorage.removeItem("user");
+    // Navigate back to home page
     navigate("/");
   };
 
   const selectedMember = members.find(m => m.id === selectedMemberId);
 
   return (
-    <SidebarProvider>
+    <SidebarProvider defaultOpen={true}>
       <div className="min-h-screen flex w-full bg-background">
-        <AdminSidebar onBackToUser={handleBackToUser} />
+        <AdminSidebar onLogout={handleLogout} onNavigate={handleBackFromMember} />
         
-        <main className="flex-1 overflow-auto">
+        <SidebarInset className="flex-1 overflow-auto">
+          {/* Mobile trigger button */}
+          <div className="sticky top-0 z-40 flex h-14 items-center gap-4 border-b border-border/50 bg-card/50 backdrop-blur-xl px-4 md:hidden">
+            <SidebarTrigger className="md:hidden" />
+          </div>
+          
           {selectedMember ? (
             <MemberDetailView 
               member={selectedMember} 
@@ -66,44 +75,17 @@ const AdminPortal = () => {
                 } 
               />
               <Route 
-                path="departments" 
+                path="leaderboard" 
                 element={
-                  <div className="p-6">
-                    <h1 className="font-display text-3xl font-bold mb-2">Departments</h1>
-                    <p className="text-muted-foreground">Department management coming soon...</p>
-                  </div>
-                } 
-              />
-              <Route 
-                path="analytics" 
-                element={
-                  <div className="p-6">
-                    <h1 className="font-display text-3xl font-bold mb-2">Analytics</h1>
-                    <p className="text-muted-foreground">Advanced analytics coming soon...</p>
-                  </div>
-                } 
-              />
-              <Route 
-                path="reports" 
-                element={
-                  <div className="p-6">
-                    <h1 className="font-display text-3xl font-bold mb-2">Reports</h1>
-                    <p className="text-muted-foreground">HR reports generation coming soon...</p>
-                  </div>
-                } 
-              />
-              <Route 
-                path="settings" 
-                element={
-                  <div className="p-6">
-                    <h1 className="font-display text-3xl font-bold mb-2">Settings</h1>
-                    <p className="text-muted-foreground">Admin settings coming soon...</p>
-                  </div>
+                  <Leaderboard 
+                    members={members} 
+                    onViewMember={handleViewMember}
+                  />
                 } 
               />
             </Routes>
           )}
-        </main>
+        </SidebarInset>
       </div>
     </SidebarProvider>
   );

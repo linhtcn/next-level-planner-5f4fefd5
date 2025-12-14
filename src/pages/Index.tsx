@@ -1,66 +1,48 @@
-import { useState } from "react";
-import { HeroSection } from "@/components/landing/HeroSection";
-import { OnboardingForm } from "@/components/onboarding/OnboardingForm";
-import { AgentProcessing } from "@/components/dashboard/AgentProcessing";
-import { DashboardOverview } from "@/components/dashboard/DashboardOverview";
-import { UserProfile, GrowthPlan } from "@/types/growth-plan";
-import { generateMockPlan } from "@/data/mock-plan";
-
-type AppState = "landing" | "onboarding" | "processing" | "dashboard";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { LoginForm } from "@/components/auth/LoginForm";
+import { RegisterForm } from "@/components/auth/RegisterForm";
+import { User } from "@/types/auth";
 
 const Index = () => {
-  const [appState, setAppState] = useState<AppState>("landing");
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const [growthPlan, setGrowthPlan] = useState<GrowthPlan | null>(null);
+  const navigate = useNavigate();
+  const [isLogin, setIsLogin] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
 
-  const handleGetStarted = () => {
-    setAppState("onboarding");
-  };
-
-  const handleOnboardingSubmit = (profile: UserProfile) => {
-    setUserProfile(profile);
-    setAppState("processing");
-  };
-
-  const handleProcessingComplete = () => {
-    if (userProfile) {
-      const plan = generateMockPlan(userProfile);
-      setGrowthPlan(plan);
-      setAppState("dashboard");
+  useEffect(() => {
+    // Check if user is already logged in
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser);
+      // Redirect based on role
+      if (parsedUser.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/user");
+      }
     }
-  };
+  }, [navigate]);
 
-  const handleUpdateTask = (taskId: string, completed: boolean) => {
-    if (!growthPlan) return;
-
-    setGrowthPlan({
-      ...growthPlan,
-      dailyTasks: growthPlan.dailyTasks.map((task) =>
-        task.id === taskId ? { ...task, completed } : task
-      ),
-    });
-  };
+  if (user) {
+    return null; // Will redirect
+  }
 
   return (
-    <div className="min-h-screen bg-background">
-      {appState === "landing" && (
-        <HeroSection onGetStarted={handleGetStarted} />
-      )}
-
-      {appState === "onboarding" && (
-        <OnboardingForm
-          onSubmit={handleOnboardingSubmit}
-          onBack={() => setAppState("landing")}
-        />
-      )}
-
-      {appState === "processing" && (
-        <AgentProcessing onComplete={handleProcessingComplete} />
-      )}
-
-      {appState === "dashboard" && growthPlan && (
-        <DashboardOverview plan={growthPlan} onUpdateTask={handleUpdateTask} />
-      )}
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-grid-pattern opacity-5 pointer-events-none" />
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="relative z-10 w-full"
+      >
+        {isLogin ? (
+          <LoginForm onSwitchToRegister={() => setIsLogin(false)} />
+        ) : (
+          <RegisterForm onSwitchToLogin={() => setIsLogin(true)} />
+        )}
+      </motion.div>
     </div>
   );
 };

@@ -3,6 +3,7 @@ import { ArrowLeft, TrendingUp, Flame, Award, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { GrowthPlan } from "@/types/growth-plan";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
+import { UserProfileMenu } from "@/components/user/UserProfileMenu";
 
 interface ProgressChartProps {
   plan: GrowthPlan;
@@ -35,27 +36,30 @@ export const ProgressChart = ({ plan, onBack }: ProgressChartProps) => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-border bg-card/50 backdrop-blur-xl sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" onClick={onBack}>
-              <ArrowLeft className="w-5 h-5" />
-            </Button>
-            <div>
-              <h1 className="font-display text-xl font-bold">Tiến độ & Thống kê</h1>
-              <p className="text-sm text-muted-foreground">
-                Theo dõi sự phát triển của bạn
-              </p>
+        <div className="container mx-auto px-4 py-3 md:py-4">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 md:gap-4 min-w-0 flex-1">
+              <Button variant="ghost" size="icon" onClick={onBack} className="shrink-0">
+                <ArrowLeft className="w-5 h-5" />
+              </Button>
+              <div className="min-w-0">
+                <h1 className="font-display text-lg md:text-xl font-bold truncate">Progress & Statistics</h1>
+                <p className="text-xs md:text-sm text-muted-foreground truncate">
+                  Track your development journey
+                </p>
+              </div>
             </div>
+            <UserProfileMenu />
           </div>
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-4 md:py-8">
         {/* Stats Cards */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8"
+          className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8"
         >
           {[
             { 
@@ -66,21 +70,21 @@ export const ProgressChart = ({ plan, onBack }: ProgressChartProps) => {
               bg: "bg-agent-progress/10"
             },
             { 
-              label: "Tasks hoàn thành", 
+              label: "Tasks Completed", 
               value: completedTasks, 
               icon: Award, 
               color: "text-primary",
               bg: "bg-primary/10"
             },
             { 
-              label: "Ngày đã qua", 
+              label: "Days Passed", 
               value: "1/180", 
               icon: Calendar, 
               color: "text-agent-daily",
               bg: "bg-agent-daily/10"
             },
             { 
-              label: "Giờ học trung bình", 
+              label: "Avg Study Hours", 
               value: `${avgDailyHours}h`, 
               icon: TrendingUp, 
               color: "text-agent-skill",
@@ -92,13 +96,13 @@ export const ProgressChart = ({ plan, onBack }: ProgressChartProps) => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
-              className="glass-card p-5"
+              className="glass-card p-3 md:p-5"
             >
-              <div className={`w-10 h-10 rounded-lg ${stat.bg} flex items-center justify-center mb-3`}>
-                <stat.icon className={`w-5 h-5 ${stat.color}`} />
+              <div className={`w-8 h-8 md:w-10 md:h-10 rounded-lg ${stat.bg} flex items-center justify-center mb-2 md:mb-3`}>
+                <stat.icon className={`w-4 h-4 md:w-5 md:h-5 ${stat.color}`} />
               </div>
-              <p className="text-3xl font-display font-bold">{stat.value}</p>
-              <p className="text-sm text-muted-foreground">{stat.label}</p>
+              <p className="text-2xl md:text-3xl font-display font-bold">{stat.value}</p>
+              <p className="text-xs md:text-sm text-muted-foreground">{stat.label}</p>
             </motion.div>
           ))}
         </motion.div>
@@ -108,10 +112,10 @@ export const ProgressChart = ({ plan, onBack }: ProgressChartProps) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="glass-card p-6 mb-6"
+          className="glass-card p-4 md:p-6 mb-4 md:mb-6"
         >
-          <h2 className="font-display text-xl font-bold mb-6">Tiến độ theo tuần</h2>
-          <div className="h-[300px]">
+          <h2 className="font-display text-lg md:text-xl font-bold mb-4 md:mb-6">Weekly Progress</h2>
+          <div className="h-[250px] sm:h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={weeklyData.slice(0, 4)}>
                 <defs>
@@ -156,25 +160,25 @@ export const ProgressChart = ({ plan, onBack }: ProgressChartProps) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="glass-card p-6"
+          className="glass-card p-4 md:p-6"
         >
-          <h2 className="font-display text-xl font-bold mb-6">Tiến độ kỹ năng</h2>
-          <div className="h-[300px]">
+          <h2 className="font-display text-lg md:text-xl font-bold mb-4 md:mb-6">Skills Progress</h2>
+          <div className="h-[250px] sm:h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={skillData} layout="vertical">
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(217, 33%, 17%)" />
                 <XAxis 
                   type="number" 
                   stroke="hsl(215, 20%, 55%)" 
-                  fontSize={12}
+                  fontSize={10}
                   domain={[0, 100]}
                 />
                 <YAxis 
                   type="category" 
                   dataKey="name" 
                   stroke="hsl(215, 20%, 55%)" 
-                  fontSize={12}
-                  width={100}
+                  fontSize={10}
+                  width={80}
                 />
                 <Tooltip
                   contentStyle={{
@@ -188,13 +192,13 @@ export const ProgressChart = ({ plan, onBack }: ProgressChartProps) => {
                   dataKey="current" 
                   fill="hsl(160, 84%, 39%)" 
                   radius={[0, 4, 4, 0]}
-                  name="Hiện tại"
+                  name="Current"
                 />
                 <Bar 
                   dataKey="target" 
                   fill="hsl(199, 89%, 48%)" 
                   radius={[0, 4, 4, 0]}
-                  name="Mục tiêu"
+                  name="Target"
                   opacity={0.5}
                 />
               </BarChart>

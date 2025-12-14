@@ -1,13 +1,15 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { 
   ArrowLeft, Calendar, Target, TrendingUp, CheckCircle2, 
-  Clock, Award, Brain, BarChart3 
+  Clock, Award, Brain, BarChart3, Sparkles
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { TeamMember } from "@/types/admin";
+import { NFTDetailsDialog } from "./NFTDetailsDialog";
 import { 
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, 
   ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, 
@@ -20,6 +22,7 @@ interface MemberDetailViewProps {
 }
 
 export const MemberDetailView = ({ member, onBack }: MemberDetailViewProps) => {
+  const [nftDialogOpen, setNftDialogOpen] = useState(false);
   const plan = member.growthPlan;
   
   if (!plan) {
@@ -53,10 +56,10 @@ export const MemberDetailView = ({ member, onBack }: MemberDetailViewProps) => {
   }));
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-4 md:space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" onClick={onBack}>
+      <div className="flex items-center gap-2 md:gap-4">
+        <Button variant="ghost" onClick={onBack} size="sm" className="text-sm">
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back
         </Button>
@@ -66,45 +69,58 @@ export const MemberDetailView = ({ member, onBack }: MemberDetailViewProps) => {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="glass-card p-6"
+        className="glass-card p-4 md:p-6"
       >
-        <div className="flex items-start gap-6">
-          <Avatar className="w-20 h-20">
-            <AvatarFallback className="bg-primary/20 text-primary text-2xl font-bold">
+        <div className="flex flex-col sm:flex-row items-start gap-4 md:gap-6">
+          <Avatar className="w-16 h-16 md:w-20 md:h-20 shrink-0">
+            <AvatarFallback className="bg-primary/20 text-primary text-xl md:text-2xl font-bold">
               {member.name.split(' ').map(n => n[0]).join('')}
             </AvatarFallback>
           </Avatar>
           
-          <div className="flex-1">
-            <div className="flex items-center gap-3 mb-2">
-              <h1 className="font-display text-2xl font-bold">{member.name}</h1>
-              <Badge variant="secondary">{member.department}</Badge>
+          <div className="flex-1 min-w-0 w-full">
+            <div className="flex flex-wrap items-center gap-2 md:gap-3 mb-2">
+              <h1 className="font-display text-xl md:text-2xl font-bold break-words">{member.name}</h1>
+              <Badge variant="secondary" className="text-xs">{member.department}</Badge>
             </div>
-            <p className="text-muted-foreground mb-4">{member.email}</p>
+            <p className="text-sm md:text-base text-muted-foreground mb-3 md:mb-4 break-all">{member.email}</p>
             
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-4 md:mb-0">
               <div>
-                <p className="text-sm text-muted-foreground">Current Role</p>
-                <p className="font-medium">{member.profile.role}</p>
+                <p className="text-xs md:text-sm text-muted-foreground">Current Role</p>
+                <p className="font-medium text-sm md:text-base break-words">{member.profile.role}</p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Level</p>
-                <p className="font-medium">{member.profile.currentLevel} → {member.profile.targetLevel}</p>
+                <p className="text-xs md:text-sm text-muted-foreground">Level</p>
+                <p className="font-medium text-sm md:text-base">{member.profile.currentLevel} → {member.profile.targetLevel}</p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Daily Commitment</p>
-                <p className="font-medium">{member.profile.dailyTime}h/day</p>
+                <p className="text-xs md:text-sm text-muted-foreground">Daily Commitment</p>
+                <p className="font-medium text-sm md:text-base">{member.profile.dailyTime}h/day</p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Joined</p>
-                <p className="font-medium">{new Date(member.joinedAt).toLocaleDateString('vi-VN')}</p>
+                <p className="text-xs md:text-sm text-muted-foreground">Joined</p>
+                <p className="font-medium text-sm md:text-base">{new Date(member.joinedAt).toLocaleDateString('en-US')}</p>
               </div>
             </div>
           </div>
 
-          <div className="text-center glass-card px-6 py-4">
-            <p className="text-4xl font-display font-bold text-primary">{plan.consistencyScore}%</p>
-            <p className="text-sm text-muted-foreground">Consistency Score</p>
+          <div className="flex gap-3 md:gap-4 w-full sm:w-auto sm:flex-col">
+            <div className="text-center glass-card px-4 md:px-6 py-3 md:py-4 flex-1 sm:flex-initial">
+              <p className="text-2xl md:text-4xl font-display font-bold text-primary">{plan.consistencyScore}%</p>
+              <p className="text-xs md:text-sm text-muted-foreground">Consistency Score</p>
+            </div>
+            <div 
+              className="text-center glass-card px-4 md:px-6 py-3 md:py-4 cursor-pointer hover:bg-primary/10 transition-colors flex-1 sm:flex-initial"
+              onClick={() => setNftDialogOpen(true)}
+            >
+              <div className="flex items-center justify-center gap-2 mb-1">
+                <Sparkles className="w-4 h-4 md:w-5 md:h-5 text-primary" />
+                <p className="text-2xl md:text-4xl font-display font-bold text-primary">{member.nftCount}</p>
+              </div>
+              <p className="text-xs md:text-sm text-muted-foreground">NFTs</p>
+              <p className="text-xs text-primary mt-1 hover:underline">Click to view</p>
+            </div>
           </div>
         </div>
       </motion.div>
@@ -114,7 +130,7 @@ export const MemberDetailView = ({ member, onBack }: MemberDetailViewProps) => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="grid grid-cols-2 md:grid-cols-4 gap-4"
+        className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4"
       >
         {[
           { label: "Tasks Completed", value: `${completedTasks}/${totalTasks}`, icon: CheckCircle2, color: "text-primary" },
@@ -122,26 +138,26 @@ export const MemberDetailView = ({ member, onBack }: MemberDetailViewProps) => {
           { label: "OKRs Active", value: plan.okrs.length, icon: Target, color: "text-agent-goal" },
           { label: "Skills Tracked", value: plan.skills.length, icon: Brain, color: "text-agent-skill" },
         ].map((stat, i) => (
-          <div key={stat.label} className="glass-card p-4">
-            <stat.icon className={`w-5 h-5 ${stat.color} mb-2`} />
-            <p className="text-xl font-bold">{stat.value}</p>
-            <p className="text-sm text-muted-foreground">{stat.label}</p>
+          <div key={stat.label} className="glass-card p-3 md:p-4">
+            <stat.icon className={`w-4 h-4 md:w-5 md:h-5 ${stat.color} mb-2`} />
+            <p className="text-lg md:text-xl font-bold">{stat.value}</p>
+            <p className="text-xs md:text-sm text-muted-foreground">{stat.label}</p>
           </div>
         ))}
       </motion.div>
 
       {/* Charts */}
-      <div className="grid lg:grid-cols-2 gap-6">
+      <div className="grid lg:grid-cols-2 gap-4 md:gap-6">
         {/* Weekly Progress */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="glass-card p-6"
+          className="glass-card p-4 md:p-6"
         >
-          <div className="flex items-center gap-2 mb-6">
-            <BarChart3 className="w-5 h-5 text-agent-progress" />
-            <h2 className="font-display text-xl font-bold">Weekly Progress</h2>
+          <div className="flex items-center gap-2 mb-4 md:mb-6">
+            <BarChart3 className="w-4 h-4 md:w-5 md:h-5 text-agent-progress shrink-0" />
+            <h2 className="font-display text-lg md:text-xl font-bold">Weekly Progress</h2>
           </div>
           
           <ResponsiveContainer width="100%" height={250}>
@@ -181,11 +197,11 @@ export const MemberDetailView = ({ member, onBack }: MemberDetailViewProps) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="glass-card p-6"
+          className="glass-card p-4 md:p-6"
         >
-          <div className="flex items-center gap-2 mb-6">
-            <Brain className="w-5 h-5 text-agent-skill" />
-            <h2 className="font-display text-xl font-bold">Skill Development</h2>
+          <div className="flex items-center gap-2 mb-4 md:mb-6">
+            <Brain className="w-4 h-4 md:w-5 md:h-5 text-agent-skill shrink-0" />
+            <h2 className="font-display text-lg md:text-xl font-bold">Skill Development</h2>
           </div>
           
           <ResponsiveContainer width="100%" height={250}>
@@ -219,19 +235,19 @@ export const MemberDetailView = ({ member, onBack }: MemberDetailViewProps) => {
         </motion.div>
       </div>
 
-      {/* OKRs */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
-        className="glass-card p-6"
-      >
-        <div className="flex items-center gap-2 mb-6">
-          <Target className="w-5 h-5 text-agent-goal" />
-          <h2 className="font-display text-xl font-bold">6-Month OKRs</h2>
-        </div>
+          {/* OKRs */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="glass-card p-4 md:p-6"
+          >
+            <div className="flex items-center gap-2 mb-4 md:mb-6">
+              <Target className="w-4 h-4 md:w-5 md:h-5 text-agent-goal shrink-0" />
+              <h2 className="font-display text-lg md:text-xl font-bold">6-Month OKRs</h2>
+            </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
           {plan.okrs.map((okr, i) => (
             <div key={i} className="bg-secondary/50 rounded-lg p-4 space-y-3">
               <div className="flex items-center justify-between">
@@ -253,19 +269,19 @@ export const MemberDetailView = ({ member, onBack }: MemberDetailViewProps) => {
         </div>
       </motion.div>
 
-      {/* HR Summary */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5 }}
-        className="glass-card p-6"
-      >
-        <div className="flex items-center gap-2 mb-6">
-          <Award className="w-5 h-5 text-agent-hr" />
-          <h2 className="font-display text-xl font-bold">HR Evaluation Summary</h2>
-        </div>
+          {/* HR Summary */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="glass-card p-4 md:p-6"
+          >
+            <div className="flex items-center gap-2 mb-4 md:mb-6">
+              <Award className="w-4 h-4 md:w-5 md:h-5 text-agent-hr shrink-0" />
+              <h2 className="font-display text-lg md:text-xl font-bold">HR Evaluation Summary</h2>
+            </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
           <div className="space-y-2">
             <p className="text-sm text-muted-foreground">Strongest Skills</p>
             <div className="flex flex-wrap gap-2">
@@ -306,6 +322,14 @@ export const MemberDetailView = ({ member, onBack }: MemberDetailViewProps) => {
           </div>
         </div>
       </motion.div>
+
+      {/* NFT Details Dialog */}
+      <NFTDetailsDialog
+        open={nftDialogOpen}
+        onOpenChange={setNftDialogOpen}
+        nfts={member.nfts}
+        memberName={member.name}
+      />
     </div>
   );
 };

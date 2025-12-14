@@ -10,6 +10,8 @@ export interface TeamMember {
   growthPlan: GrowthPlan | null;
   joinedAt: string;
   lastActive: string;
+  nftCount: number;
+  nfts: NFT[];
 }
 
 export interface TeamStats {
@@ -27,4 +29,14 @@ export interface DepartmentSummary {
   memberCount: number;
   avgProgress: number;
   avgConsistency: number;
+}
+
+export interface NFT {
+  id: string;
+  name: string;
+  description: string;
+  type: "okr" | "consistency" | "skill" | "milestone";
+  earnedAt: string;
+  blockchainHash: string;
+  imageUrl?: string;
 }

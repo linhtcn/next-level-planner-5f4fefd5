@@ -12,35 +12,35 @@ const agents: { id: string; name: string; icon: React.ElementType; description: 
     id: "skill-gap",
     name: "Skill Gap Agent",
     icon: Brain,
-    description: "Đang phân tích khoảng cách kỹ năng...",
+    description: "Analyzing skill gaps...",
     color: "text-agent-skill",
   },
   {
     id: "goal-planning",
     name: "Goal Planning Agent",
     icon: Target,
-    description: "Đang tạo mục tiêu SMART 6 tháng...",
+    description: "Creating SMART 6-month goals...",
     color: "text-agent-goal",
   },
   {
     id: "daily-breakdown",
     name: "Daily Breakdown Agent",
     icon: Calendar,
-    description: "Đang chia nhỏ thành 180 ngày...",
+    description: "Breaking down into 180 days...",
     color: "text-agent-daily",
   },
   {
     id: "progress-tracker",
     name: "Progress Tracker Agent",
     icon: TrendingUp,
-    description: "Đang thiết lập hệ thống theo dõi...",
+    description: "Setting up tracking system...",
     color: "text-agent-progress",
   },
   {
     id: "hr-summary",
     name: "HR Summary Agent",
     icon: Users,
-    description: "Đang chuẩn bị báo cáo đánh giá...",
+    description: "Preparing evaluation report...",
     color: "text-agent-hr",
   },
 ];
@@ -92,22 +92,22 @@ export const AgentProcessing = ({ onComplete }: AgentProcessingProps) => {
   }, [onComplete]);
 
   return (
-    <section className="min-h-screen flex items-center justify-center py-20 px-4">
+    <section className="min-h-screen flex items-center justify-center py-8 md:py-20 px-4">
       <div className="w-full max-w-3xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
+          className="text-center mb-8 md:mb-12"
         >
-          <h2 className="font-display text-4xl font-bold mb-4">
-            AI Agents đang làm việc
+          <h2 className="font-display text-2xl md:text-4xl font-bold mb-2 md:mb-4">
+            AI Agents at Work
           </h2>
-          <p className="text-muted-foreground text-lg">
-            5 AI Agents đang phối hợp để tạo lộ trình phát triển cho bạn
+          <p className="text-sm md:text-lg text-muted-foreground">
+            5 AI Agents are collaborating to create your growth plan
           </p>
         </motion.div>
 
-        <div className="space-y-4">
+        <div className="space-y-3 md:space-y-4">
           {agents.map((agent, index) => {
             const status = statuses[agent.id];
             const isActive = index === currentAgent;
@@ -120,13 +120,13 @@ export const AgentProcessing = ({ onComplete }: AgentProcessingProps) => {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className={`glass-card p-6 transition-all duration-500 ${
+                className={`glass-card p-4 md:p-6 transition-all duration-500 ${
                   isActive ? "border-primary glow-effect" : ""
                 } ${isComplete ? "border-primary/50" : ""}`}
               >
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3 md:gap-4">
                   <div
-                    className={`w-14 h-14 rounded-xl flex items-center justify-center transition-all duration-300 ${
+                    className={`w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center transition-all duration-300 shrink-0 ${
                       isComplete
                         ? "bg-primary/20"
                         : isActive
@@ -135,24 +135,24 @@ export const AgentProcessing = ({ onComplete }: AgentProcessingProps) => {
                     }`}
                   >
                     {isComplete ? (
-                      <CheckCircle2 className="w-7 h-7 text-primary" />
+                      <CheckCircle2 className="w-6 h-6 md:w-7 md:h-7 text-primary" />
                     ) : isActive ? (
-                      <Loader2 className={`w-7 h-7 ${agent.color} animate-spin`} />
+                      <Loader2 className={`w-6 h-6 md:w-7 md:h-7 ${agent.color} animate-spin`} />
                     ) : (
-                      <Icon className={`w-7 h-7 ${agent.color} opacity-50`} />
+                      <Icon className={`w-6 h-6 md:w-7 md:h-7 ${agent.color} opacity-50`} />
                     )}
                   </div>
 
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="font-semibold text-lg">{agent.name}</h3>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between mb-2 gap-2">
+                      <h3 className="font-semibold text-base md:text-lg truncate">{agent.name}</h3>
                       {isComplete && (
-                        <span className="text-xs text-primary font-medium">
-                          Hoàn thành
+                        <span className="text-xs text-primary font-medium shrink-0">
+                          Complete
                         </span>
                       )}
                     </div>
-                    <p className="text-sm text-muted-foreground mb-3">
+                    <p className="text-xs md:text-sm text-muted-foreground mb-2 md:mb-3 break-words">
                       {agent.description}
                     </p>
                     

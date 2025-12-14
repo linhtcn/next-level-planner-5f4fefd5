@@ -45,11 +45,11 @@ export const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="font-display text-5xl md:text-7xl font-bold mb-6 leading-tight"
+            className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-4 md:mb-6 leading-tight px-2"
           >
-            <span className="text-foreground">Lộ trình phát triển</span>
+            <span className="text-foreground">Your Growth Journey</span>
             <br />
-            <span className="gradient-text">6 tháng với AI</span>
+            <span className="gradient-text">6 Months with AI</span>
           </motion.h1>
 
           {/* Subtitle */}
@@ -57,10 +57,10 @@ export const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed"
+            className="text-base sm:text-lg md:text-xl text-muted-foreground mb-6 md:mb-10 max-w-2xl mx-auto leading-relaxed px-4"
           >
-            AI Multi-Agent tự động phân tích kỹ năng, xây dựng mục tiêu SMART, 
-            và tạo kế hoạch 180 ngày chi tiết cho sự nghiệp của bạn.
+            AI Multi-Agent automatically analyzes your skills, builds SMART goals, 
+            and creates a detailed 180-day plan for your career.
           </motion.p>
 
           {/* CTA Buttons */}
@@ -71,7 +71,7 @@ export const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
             className="flex flex-col sm:flex-row gap-4 justify-center mb-16"
           >
             <Button variant="hero" size="xl" onClick={onGetStarted}>
-              Bắt đầu ngay
+              Get Started
               <ArrowRight className="w-5 h-5" />
             </Button>
             <Button variant="glass" size="xl" onClick={() => navigate("/admin")}>
@@ -85,7 +85,7 @@ export const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.8 }}
-            className="grid grid-cols-2 md:grid-cols-5 gap-4"
+            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 md:gap-4 px-2"
           >
             {[
               { icon: Brain, label: "Skill Gap Agent", color: "text-agent-skill" },
