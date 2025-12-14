@@ -74,10 +74,6 @@ export const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
               Get Started
               <ArrowRight className="w-5 h-5" />
             </Button>
-            <Button variant="glass" size="xl" onClick={() => navigate("/admin")}>
-              <Shield className="w-5 h-5" />
-              Admin Portal
-            </Button>
           </motion.div>
 
           {/* Agent Cards Preview */}
